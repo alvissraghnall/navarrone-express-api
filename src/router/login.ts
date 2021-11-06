@@ -2,15 +2,15 @@ import jwtGenerator from '../util/jwtGenerator';
 import { Router } from 'express';
 import { verify } from '../util/scryptFunctions';
 import pool from "../db";
+import validation from "../middleware/validation";
 
 const router = Router();
 
 
-
-router.post("/auth", async (req, res) => {
+router.post("/auth", validation, async (req, res) => {
     try {
         const { email, password } = req.body;
-        
+
         const user = await pool.query("SELECT * FROM users WHERE user_email = $1", [
             email,
         ]);

@@ -11,7 +11,7 @@ const PRIVATE_KEY = readFileSync(dir + "/private.key", "utf8");
 
 export default function jwtGenerator(user_id: string) {
     const payload = {
-        user_id
+      user_id
     }
 
     return jwt.sign(payload, PRIVATE_KEY, {

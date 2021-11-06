@@ -2,12 +2,13 @@ import { Router } from "express";
 import pool from "../db";
 import jwtGenerator from "../util/jwtGenerator";
 import { hash, verify } from '../util/scryptFunctions';
+import validation from "../middleware/validation";
 
 // import { ValidationError } from "express-validator";
 
 const router = Router();
 
-router.post("/auth", async (req, res) => {
+router.post("/auth", validation, async (req, res) => {
     try {
         const { name, userName, phoneNumber, country, email, password } = req.body;
 
@@ -25,6 +26,7 @@ router.post("/auth", async (req, res) => {
 
         const token = jwtGenerator(newUser.rows[0].user_id);
 
+        res.cookie("token", token, {httpOnly: true});
         res.json({ token });
 
     } catch (err) {
