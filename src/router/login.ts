@@ -2,6 +2,7 @@ import jwtGenerator from '../util/jwtGenerator';
 import { Router } from 'express';
 import { verify } from '../util/scryptFunctions';
 import pool from "../db";
+import checkEmail from '../util/checkEmail';
 import validation from "../middleware/validation";
 
 const router = Router();
@@ -25,8 +26,11 @@ router.post("/auth", validation, async (req, res) => {
             return res.status(401).json("Incorrect password or email. Please recheck & retry.");
         }
 
+        checkEmail("afe6510d-836e-4b14-8831-f10c6034e51a");
+
         const token = jwtGenerator(user.rows[0].user_id);
 
+        res.cookie("token", token, {httpOnly: true});
         res.json({ token });
 
     } catch (err) {

@@ -24,6 +24,7 @@ router.post("/auth", validation, async (req, res) => {
             name, userName, phoneNumber, email, hashedPassword, country
         ]);
 
+
         const token = jwtGenerator(newUser.rows[0].user_id);
 
         res.cookie("token", token, {httpOnly: true});

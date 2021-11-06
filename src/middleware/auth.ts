@@ -15,7 +15,7 @@ export default async function (req: Request, res: Response, next: NextFunction) 
         if(!jwtToken){
             return res.status(403).json("Not authorized");
         }
-      
+
         const payload = verify(jwtToken, PUBLIC_KEY);
 
         req.user = payload;
