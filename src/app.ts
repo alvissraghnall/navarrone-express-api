@@ -7,6 +7,8 @@ import validate from './middleware/validation';
 import dashboard from './router/dashboard';
 import checkUserName from "./router/checkUserName";
 import verify from "./router/verify";
+import cookieParser from "cookie-parser";
+import csurf from "csurf";
 
 config();
 const port = process.env.PORT || 4477;
@@ -17,6 +19,7 @@ let app = express();
 // res: Response<any, Record<string, any>, number>
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/register", validate, register);

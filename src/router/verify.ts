@@ -6,7 +6,7 @@ const router = Router();
 router.post("/", auth, async (req, res) => {
   try {
     res.json(true);
-    // return res.json({ head: req.header("token") , ck: req.heade });
+    // res.json({ head: req.header("token") , ck: req.cookies });
 
   } catch (err){
     const _err = <Error>err;

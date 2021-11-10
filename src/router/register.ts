@@ -3,6 +3,7 @@ import pool from "../db";
 import jwtGenerator from "../util/jwtGenerator";
 import { hash, verify } from '../util/scryptFunctions';
 import validation from "../middleware/validation";
+import checkEmail from "../util/checkEmail";
 
 // import { ValidationError } from "express-validator";
 
@@ -24,12 +25,7 @@ router.post("/auth", validation, async (req, res) => {
             name, userName, phoneNumber, email, hashedPassword, country
         ]);
 
-
-        const token = jwtGenerator(newUser.rows[0].user_id);
-
-        res.cookie("token", token, {httpOnly: true});
-        res.json({ token });
-
+        res.status(201).send("User registration successful.");
     } catch (err) {
         const _err = <Error>err;
         console.error(_err.message);
