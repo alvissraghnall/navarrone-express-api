@@ -3,7 +3,7 @@ import type {Request, Response, NextFunction} from 'express';
 import { readFileSync } from 'fs';
 
 
-const [dir, excess] = __dirname.split("/src");
+const [dir, ] = __dirname.split("/src");
 
 const PUBLIC_KEY = readFileSync(dir + "/priv.key.pub", "utf8");
 
