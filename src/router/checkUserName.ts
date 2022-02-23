@@ -8,11 +8,11 @@ router.post("/", async (req, res) => {
   try {
     const { userName } = req.body;
     const users = await pool.query(
-      "SELECT * FROM users WHERE user_display_name ILIKE $1",
+      "SELECT user_display_name FROM users WHERE user_display_name ILIKE $1",
       [userName]
     );
 
-    if(users) {
+    if(users.rows.length != 0) {
       console.log({msg: "Username already taken by another user."});
       return res.json({msg: "Username already taken by another user."});
     }
