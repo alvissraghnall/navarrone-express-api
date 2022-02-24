@@ -3,37 +3,47 @@ import {
   Column, 
   PrimaryGeneratedColumn 
 } from "typeorm";
-
+  
 //user_name, user_display_name, user_phone_number, user_email, user_password, user_country)
 
-@Entity
+
+@Entity()
 export class User {
   
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
   
   @Column({
-    length: 250
-  })
-  name: string;
-  
-  @Column({
+    type: "varchar",
     length: 255
   })
-  userName: string;
-  
-  @Column()
-  phoneNumber: string;
+  name!: string;
   
   @Column({
+    type: "varchar",
     length: 255
   })
-  email: string;
+  userName!: string;
   
-  @Column()
-  password: string;
+  @Column({
+    type: "varchar",
+    length: 255
+  })
+  phoneNumber!: string;
   
-  @Column()
-  country: string;
+  @Column({
+    length: 255,
+    type: "varchar"
+  })
+  email!: string;
+  
+  @Column({
+    type: "varchar",
+    length: 255
+  })
+  password!: string;
+  
+  @Column("varchar")
+  country!: string;
   
 }

@@ -1,5 +1,7 @@
 import { Router, Request, Response} from "express";
 import RegisterService from "./RegisterService";
+import { User as UserEntity } from "../entity/User";
+
 
 export default class RegisterController {
   public router: Router;
@@ -12,10 +14,8 @@ export default class RegisterController {
   }
   
   private registerUser = (req: Request, res: Response) => {
-    console.log("God works.");
-    const create = this.registerService.create();
-    console.log(this);
-    res.send(create);
+    const user = req["body"] as UserEntity;
+    console.log(user);
   }
   
   private routes(){
