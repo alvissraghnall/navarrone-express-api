@@ -3,12 +3,13 @@ import {
   Column, 
   PrimaryGeneratedColumn 
 } from "typeorm";
+import { User as UserAble } from "../types/User.type";
   
 //user_name, user_display_name, user_phone_number, user_email, user_password, user_country)
 
 
 @Entity()
-export class User {
+export class User implements UserAble {
   
   @PrimaryGeneratedColumn("uuid")
   id!: string;

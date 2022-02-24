@@ -4,3 +4,4 @@ src/**/*.js.map
 dist
 *.log
 .env
+ormconfig.json
