@@ -34,11 +34,15 @@ export default class RegisterController {
     });
   }
   
-  private registerUser = async (req: Request, res: Response) => {
+  private registerUser = async (req: Request, res: Response): Promise<Response> => {
     const user = await this.handleBody(req) as UserEntity;
     //console.log(req.body, req["body"], user);
+    if(await this.registerService.checkEmail(user.email)){
+      return res.status(403).send("Email already in use. Please login, or try another.");
+    }
+
     const newUser = await this.registerService.create(user);
-    res.json(newUser);
+    return res.status(201).json(newUser);
   }
   
   private routes(){

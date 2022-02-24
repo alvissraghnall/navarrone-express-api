@@ -12,8 +12,8 @@ export default class RegisterService {
   }
   
   public checkEmail = async (email: string) => {
-    const email = await this.registerRepository.findByEmail(email);
-    return !!email;
+    const data = await this.registerRepository.findByEmail(email);
+    return !!data;
   }
   
   public create = async (user: UserEntity) => {
