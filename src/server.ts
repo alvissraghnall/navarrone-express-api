@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import RouteHandler from "./router/RouteHandler";
 import {createConnection} from "typeorm";
+import cors from "cors";
 
 
 class Server {
@@ -15,6 +16,7 @@ class Server {
   
   private configuration(): void {
     this.app.set("port", process.env.PORT || 3000);
+    this.app.use(cors());
     this.app.use(express.json());
   }
   

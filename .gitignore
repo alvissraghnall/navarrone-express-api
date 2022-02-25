@@ -5,3 +5,5 @@ dist
 *.log
 .env
 ormconfig.json
+*.key
+*.pub
