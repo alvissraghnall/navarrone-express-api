@@ -1,7 +1,8 @@
 import { 
   Entity, 
   Column, 
-  PrimaryGeneratedColumn 
+  PrimaryGeneratedColumn,
+  BeforeInsert
 } from "typeorm";
 import { User as UserAble } from "../types/User.type";
   
@@ -12,25 +13,25 @@ import { User as UserAble } from "../types/User.type";
 export class User implements UserAble {
   
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id?: string;
+  
+  @Column({
+    type: "varchar",
+    length: 500
+  })
+  name?: string;
   
   @Column({
     type: "varchar",
     length: 255
   })
-  name!: string;
+  userName?: string;
   
   @Column({
     type: "varchar",
     length: 255
   })
-  userName!: string;
-  
-  @Column({
-    type: "varchar",
-    length: 255
-  })
-  phoneNumber!: string;
+  phoneNumber?: string;
   
   @Column({
     length: 255,
@@ -45,6 +46,28 @@ export class User implements UserAble {
   password!: string;
   
   @Column("varchar")
-  country!: string;
+  country?: string;
+  
+  @Column({ default: false })
+  isVerified?: boolean;
+  
+  /**
+  @BeforeInsert()
+  hashPassword() {
+    /*
+    console.log("in hash pwd fn");
+    await new Promise((resolve, reject) => {
+      const salt = randomBytes(16).toString("hex");
+      console.log(salt);
+      scrypt(this.password, salt, 64, (err, derivedKey) => {
+        console.log(this.password);
+        err ? reject(err) : resolve(this.password = salt + ":" + derivedKey.toString("hex"));
+      });
+    });
+    *//*
+    this.password = "jesus walks!"
+    return this.password;
+  }
+  */
   
 }

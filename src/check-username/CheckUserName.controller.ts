@@ -12,9 +12,12 @@ export default class CheckUserNameController {
     this.routeHandler();
   }
   
-  private checkUName = async (req: Request, res: Response) => {
+  private checkUName = async (req: Request, res: Response): Promise<Response> => {
     const { userName } = req.body;
     const exists = await this.checkUserNameService.check(userName);
+    console.log(exists);
+    if(exists) return res.send("Username already in use. Please select another.");
+    return res.send("Looks Good!");
   }
 
 

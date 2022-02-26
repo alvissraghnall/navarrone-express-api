@@ -1,13 +1,14 @@
 import { Router, Request, Response} from "express";
 import RegisterService from "./RegisterService";
 import { User as UserEntity } from "../entity/User";
-import { randomBytes, scrypt } from "crypto";
 import { User as UserAble } from "../types/User.type";
+import { randomBytes, scrypt } from "crypto";
+import validation from "../middleware/validation";
 
 
 export default class RegisterController {
   public router: Router;
-  private registerService: RegisterService;
+  private readonly registerService: RegisterService;
   
   constructor(){
     this.router = Router();
@@ -15,13 +16,14 @@ export default class RegisterController {
     this.routes();
   }
   
+
   private async handleBody({ body }: Request): Promise<UserAble>  {
     const user = body;
-    user.email = user.email.toLowerCase();
     user.password = await this.hashPassword(user.password);
     
     return user as UserAble;
   }
+  
   
   
   private hashPassword(password: string): Promise<string> {
@@ -33,9 +35,10 @@ export default class RegisterController {
       });
     });
   }
+
   
   private registerUser = async (req: Request, res: Response): Promise<Response> => {
-    const user = await this.handleBody(req) as UserEntity;
+    const user: UserAble = await this.handleBody(req);
     //console.log(req.body, req["body"], user);
     if(await this.registerService.checkEmail(user.email)){
       return res.status(403).send("Email already in use. Please login, or try another.");
@@ -46,7 +49,7 @@ export default class RegisterController {
   }
   
   private routes(){
-    this.router.post("/", this.registerUser)
+    this.router.post("/", validation, this.registerUser)
   }
 }
 
