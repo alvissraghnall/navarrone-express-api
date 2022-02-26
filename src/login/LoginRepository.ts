@@ -9,7 +9,7 @@ import { LoginRepo } from "../types/General";
 
 @EntityRepository(UserEntity)
 export default class LoginRepository extends RegisterRepository {
-  public findByEmail(email: string): Partial<UserEntity> {
+  public findByEmail(email: string): any {
     return this.findOne({
       select: ["password", "isVerified"],
       where: { email }
