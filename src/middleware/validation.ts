@@ -1,7 +1,7 @@
 
 import type { Request, Response, NextFunction } from 'express';
 
-export default async function (req: Request, res: Response, next: NextFunction) {
+export default function (req: Request, res: Response, next: NextFunction): Response | void {
     const { name, userName, phoneNumber, country, email, password } = req.body;
     function validEmail(userEmail: string) {
         return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
@@ -9,20 +9,20 @@ export default async function (req: Request, res: Response, next: NextFunction) 
     if (req.baseUrl === "/api/register") {
         console.log(!email.length);
         if (![email, name, password, userName, phoneNumber, country].every(Boolean)) {
-            return res.json("Missing Credentials");
+            return res.status(401).json("Missing Credentials");
         } else if (!validEmail(email)) {
-            return res.json("Invalid Email");
+            return res.status(401).json("Invalid Email");
         }
     }
     else if (req.baseUrl === "/api/login") {
-        
+       
         if (![email, password].every(Boolean)) {
-            return res.json("Missing Credentials");
+            return res.status(401).json("Missing Credentials");
         } else if (!validEmail(email)) {
-            return res.json("Invalid Email");
+            return res.status(401).json("Invalid Email");
         }
 
     }
-    next();
+    return next();
 }
 

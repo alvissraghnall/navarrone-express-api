@@ -8,4 +8,5 @@ export interface User {
   country?: string;
   isVerified?: boolean;
   //hashPassword: () => /* Promise<void> */ string;
+  uniqueString?: string;
 }

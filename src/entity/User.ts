@@ -51,6 +51,11 @@ export class User implements UserAble {
   @Column({ default: false })
   isVerified?: boolean;
   
+  @Column({
+    nullable: true
+  })
+  uniqueString?: string
+  
   /**
   @BeforeInsert()
   hashPassword() {

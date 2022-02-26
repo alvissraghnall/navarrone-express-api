@@ -28,7 +28,7 @@ export default class LoginController {
     });
   }
 
-  private async loginUser(req: Request, res: Response): Promise<Response> {
+  private loginUser = async (req: Request, res: Response): Promise<Response> => {
     const user = req.body;
     const { password, isVerified } = await this.loginService.retrievePwd(user.email);
     if(password) {
@@ -37,7 +37,7 @@ export default class LoginController {
         return res.status(401).send(this.inputErrorMessage);
       }
       if(!isVerified) {
-        return res.status(403).send(this.unVerifiedErrorMessage);
+        return res.status(401).send(this.unVerifiedErrorMessage);
       }
       return res.status(200).send("Login successful");
     }

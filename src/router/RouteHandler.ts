@@ -2,6 +2,7 @@ import { Router } from "express";
 import RegisterController from '../register/RegisterController';
 import LoginController from "../login/LoginController";
 import CheckUserNameController from "../check-username/CheckUserName.controller";
+import VerifyEmailController from "../verify-email/VerifyEmail.controller";
 
 
 export default class RouteHandler {
@@ -9,12 +10,14 @@ export default class RouteHandler {
   private loginController: LoginController;
   private registerController: RegisterController;
   private checkUserNameController: CheckUserNameController;
+  private verifyEmailController: VerifyEmailController;
   
   constructor(){
     this.router = Router();
     this.loginController = new LoginController();
     this.registerController = new RegisterController();
     this.checkUserNameController = new CheckUserNameController();
+    this.verifyEmailController = new VerifyEmailController();
     this.handles();
   }
   
@@ -22,6 +25,7 @@ export default class RouteHandler {
     this.router.use("/register", this.registerController.router);
     this.router.use("/login", this.loginController.router);
     this.router.use("/check-username", this.checkUserNameController.router);
+    this.router.use("/:queryString", this.verifyEmailController.router);
     this.router.get("/", async (req, res) => {
       return res.send("God.");
     });

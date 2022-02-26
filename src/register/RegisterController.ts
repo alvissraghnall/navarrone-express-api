@@ -4,6 +4,8 @@ import { User as UserEntity } from "../entity/User";
 import { User as UserAble } from "../types/User.type";
 import { randomBytes, scrypt } from "crypto";
 import validation from "../middleware/validation";
+import { randomString, sendEmail } from "../util/verify-email";  
+
 
 
 export default class RegisterController {
@@ -18,7 +20,8 @@ export default class RegisterController {
   
 
   private async handleBody({ body }: Request): Promise<UserAble>  {
-    const user = body;
+    const uniqueString = randomString();
+    const user = { ...body, uniqueString };
     user.password = await this.hashPassword(user.password);
     
     return user as UserAble;
@@ -45,10 +48,11 @@ export default class RegisterController {
     }
 
     const newUser = await this.registerService.create(user);
+    sendEmail(user.email, user.uniqueString);
     return res.status(201).json(newUser);
   }
   
-  private routes(){
+  private routes(): void{
     this.router.post("/", validation, this.registerUser)
   }
 }
