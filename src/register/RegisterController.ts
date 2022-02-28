@@ -5,7 +5,7 @@ import { User as UserAble } from "../types/User.type";
 import { randomBytes, scrypt } from "crypto";
 import validation from "../middleware/validation";
 import { randomString, sendEmail } from "../util/verify-email";  
-
+import VerifyEmailController from "../verify-email/VerifyEmail.controller";
 
 
 export default class RegisterController {
@@ -20,7 +20,7 @@ export default class RegisterController {
   
 
   private async handleBody({ body }: Request): Promise<UserAble>  {
-    const uniqueString = randomString();
+    const uniqueString = VerifyEmailController.randomString();
     const user = { ...body, uniqueString };
     user.password = await this.hashPassword(user.password);
     
@@ -48,7 +48,7 @@ export default class RegisterController {
     }
 
     const newUser = await this.registerService.create(user);
-    sendEmail(user.email, user.uniqueString);
+    VerifyEmailController.sendEmail(user.email, user.uniqueString);
     return res.status(201).json(newUser);
   }
   

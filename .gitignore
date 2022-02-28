@@ -7,3 +7,4 @@ dist
 ormconfig.json
 *.key
 *.pub
+git
