@@ -14,7 +14,15 @@ export default class LoginService {
   }
 
   retrievePwd = async (email: string) => {
-    const { password, isVerified } = await this.loginRepository.findByEmail(email);
-    return { password, isVerified }
+    //console.log(await this.loginRepository.findByEmail(email));
+    
+    const values = await this.loginRepository.findByEmail(email);
+
+    if(values) {
+      const {password, isVerified } = values;
+    
+      return { password, isVerified }
+    }
+    return { f: false, p: false }
   }
 }

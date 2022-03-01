@@ -12,7 +12,7 @@ export default class CheckUserNameService {
   
   check = async (uname: string): Promise<boolean> => {
     const isUsed = await this.checkUserNameRepository.findByUserName(uname);
-    console.log(await isUsed);
+    console.log("username isUsed: ", isUsed);
     return !!isUsed;
   }
 }
