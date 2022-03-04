@@ -18,4 +18,9 @@ export default class Transaction {
   
   @Column()
   amount!: number;
+
+  // @Column({
+  //   default: "USD"
+  // })
+  // currency!: string;
 }

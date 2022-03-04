@@ -4,6 +4,8 @@ import LoginController from "../login/LoginController";
 import CheckUserNameController from "../check-username/CheckUserName.controller";
 import VerifyEmailController from "../verify-email/VerifyEmail.controller";
 import CheckEmailController from "../check-email/CheckEmail.controller";
+import ForgotPasswordController from "../forgot-password/ForgotPassword.controller";
+import ChangePasswordController from "../change-password/ChangePassword.controller";
 
 
 
@@ -14,6 +16,8 @@ export default class RouteHandler {
   private checkUserNameController: CheckUserNameController;
   private verifyEmailController: VerifyEmailController;
   private checkEmailController: CheckEmailController;
+  private forgotPasswordController: ForgotPasswordController;
+  private changePasswordController: ChangePasswordController;
   
   constructor(){
     this.router = Router();
@@ -22,6 +26,8 @@ export default class RouteHandler {
     this.checkUserNameController = new CheckUserNameController();
     this.checkEmailController = new CheckEmailController();
     this.verifyEmailController = new VerifyEmailController();
+    this.forgotPasswordController = new ForgotPasswordController();
+    this.changePasswordController = new ChangePasswordController();
     this.handles();
   }
   
@@ -30,8 +36,9 @@ export default class RouteHandler {
     this.router.use("/login", this.loginController.router);
     this.router.use("/check-username", this.checkUserNameController.router);    
     this.router.use("/check-email", this.checkEmailController.router);
-
-    this.router.use("/:queryString", this.verifyEmailController.router);
+    this.router.use("/forgot-password", this.forgotPasswordController.router);
+    this.router.use("/change-password", this.changePasswordController.router);
+    this.router.use("/verify-email", this.verifyEmailController.router);
     this.router.get("/", async (req, res) => {
       return res.send("God.");
     });

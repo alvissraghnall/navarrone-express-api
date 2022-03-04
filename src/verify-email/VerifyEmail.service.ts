@@ -11,7 +11,17 @@ export default class VerifyEmailService {
   }
 
   verify = async (queryStr: string) => {
-    const isvfied = await this.verifyEmailRepository.findByUniqueString(queryStr);
-    return isvfied;
+    const exists = await this.verifyEmailRepository.findByUniqueString(queryStr);
+    return exists;
   }
+
+  update = async (queryStr: string) => {
+    const updateIsVerified = await this.verifyEmailRepository.updateIsVerified(queryStr);
+    return updateIsVerified;
+  }
+
+  delete = async (queryStr: string) => {
+    const deleteQueryString = await this.verifyEmailRepository.deleteQueryStr(queryStr);
+    return deleteQueryString;
+  } 
 }

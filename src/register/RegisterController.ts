@@ -49,7 +49,7 @@ export default class RegisterController {
 
     const newUser = await this.registerService.create(user);
     VerifyEmailController.sendEmail(user.email, user.uniqueString);
-    return res.status(201).json(newUser);
+    return res.status(201).json(newUser.userName);
   }
   
   private routes(): void{

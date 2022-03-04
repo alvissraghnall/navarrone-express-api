@@ -52,7 +52,8 @@ export class User implements UserAble {
   isVerified?: boolean;
   
   @Column({
-    nullable: true
+    nullable: true,
+    unique: true
   })
   uniqueString?: string
   

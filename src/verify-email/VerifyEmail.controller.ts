@@ -8,6 +8,8 @@ import { createTransport } from "nodemailer";
 export default class VerifyEmailController {
   public router: Router;
   private verifyEmailService: VerifyEmailService;
+  private wrongUniqueString: string = "The string you entered is incorrect. Verify, and try again.";
+  private noUniqueString: string = "No unique string provided. Provide one, and try again.";
 
   constructor() {
     this.router = Router();
@@ -18,10 +20,19 @@ export default class VerifyEmailController {
   
   private verify = async (req: Request, res: Response) => {
     const { queryString } = req.params;
-    const isVerified = await this.verifyEmailService.verify(queryString);
+    if(!queryString) return res.status(400).send(this.noUniqueString);
+    const exists = await this.verifyEmailService.verify(queryString);
     // first, check if user with query string provided exists.
+    if(!exists) return res.status(401).send(this.wrongUniqueString);
     //  // if user does not exist, throw error.
+    const updateIsVerified = await this.verifyEmailService.update(queryString);
+    console.log(updateIsVerified);
+    
     // // else, update table to reflect change in isVerified column to true. 
+    const deleteQueryString = await this.verifyEmailService.delete(queryString);
+    console.log(deleteQueryString);
+    
+    return res.sendStatus(200);
     // // // (???) delete queryString . unsure at the moment about this part.
   }
   
@@ -52,6 +63,6 @@ export default class VerifyEmailController {
   }
 
   private routeHandler(): void {
-    this.router.post("/", this.verify);
+    this.router.post("/:queryString", this.verify);
   }
 }

@@ -11,6 +11,9 @@ export default class RegisterService {
     this.registerRepository = getConnection().getCustomRepository(RegisterRepository);
   }
   
+  // just realized this is boilerplate (??) as i also
+  // implement this in `check-email` route.
+  // perhaps a merger ??
   public checkEmail = async (email: string) => {
     try {
       
