@@ -2,9 +2,11 @@ import {
   Entity, 
   Column, 
   PrimaryGeneratedColumn,
-  BeforeInsert
+  BeforeInsert,
+  OneToMany
 } from "typeorm";
 import { User as UserAble } from "../types/User.type";
+import Transaction from "./Transaction";
   
 //user_name, user_display_name, user_phone_number, user_email, user_password, user_country)
 
@@ -56,6 +58,17 @@ export class User implements UserAble {
     unique: true
   })
   uniqueString?: string
+
+  // @Column({
+  //   type: "boolean",
+  //   nullable: false
+  // })
+  // isAccountLocked?: boolean;
+
+  @OneToMany(type => Transaction, transactions => transactions.user, {
+    onUpdate: 'CASCADE', onDelete: 'CASCADE'
+  })
+  transactions?: Transaction[];
   
   /**
   @BeforeInsert()

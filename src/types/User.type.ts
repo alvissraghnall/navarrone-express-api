@@ -8,5 +8,6 @@ export interface User {
   country?: string;
   isVerified?: boolean;
   //hashPassword: () => /* Promise<void> */ string;
+  isAccountLocked?: boolean;
   uniqueString?: string;
 }

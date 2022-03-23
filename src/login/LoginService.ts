@@ -25,4 +25,9 @@ export default class LoginService {
     }
     return { f: false, p: false }
   }
+
+  getId = async (hash: string) => {
+    const uid = await this.loginRepository.getUserId(hash);
+    return uid;
+  }
 }

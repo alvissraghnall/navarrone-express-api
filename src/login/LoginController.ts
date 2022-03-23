@@ -2,6 +2,8 @@ import { Router, Request, Response } from "express";
 import LoginService from "./LoginService";
 import { scrypt } from "crypto";
 import validation from "../middleware/validation";
+import { signToken } from "../util/jwt";
+import type { Payload } from "../types/General";
 
 export default class LoginController {
   inputErrorMessage: string = "Invalid email, or password entered. Please verify, and try again.";
@@ -39,7 +41,17 @@ export default class LoginController {
       if(!isVerified) {
         return res.status(401).send(this.unVerifiedErrorMessage);
       }
-      return res.status(200).send("Login successful");
+      const id = await this.loginService.getId(password);
+      const payload: Payload = {
+        id: id as unknown as string
+      }
+      const token = await signToken(payload);
+      console.log(token);
+      
+      return res
+        .status(200)
+        .setHeader("authorization", `Bearer ${token}`)
+        .send("Login successful");
     }
     return res.status(401).send(this.inputErrorMessage);
   }

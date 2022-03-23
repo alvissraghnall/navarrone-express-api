@@ -9,10 +9,17 @@ import { LoginRepo } from "../types/General";
 
 @EntityRepository(UserEntity)
 export default class LoginRepository extends RegisterRepository {
-  public findByEmail(email: string): any {
+  public findByEmail(email: string) {
     return this.findOne({
       select: ["password", "isVerified"],
       where: { email }
+    })
+  }
+
+  public getUserId(hash: string): Promise<undefined | UserEntity> {
+    return this.findOne({
+      select: ["id"],
+      where: { password: hash }
     })
   }
 }
