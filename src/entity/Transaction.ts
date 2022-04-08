@@ -26,8 +26,8 @@ export default class Transaction {
   })
   user!: User;
 
-  // @Column({
-  //   default: "USD"
-  // })
-  // currency!: string;
+  @Column({
+    default: "USD"
+  })
+  currency!: string;
 }

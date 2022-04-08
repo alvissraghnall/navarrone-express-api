@@ -8,3 +8,4 @@ ormconfig.json
 *.key
 *.pub
 git
+*.pem

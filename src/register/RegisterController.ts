@@ -48,7 +48,7 @@ export default class RegisterController {
     }
 
     const newUser = await this.registerService.create(user);
-    VerifyEmailController.sendEmail(user.email, user.uniqueString);
+    VerifyEmailController.sendEmail(user.email, user.name!.split(" ")[0], user.uniqueString);
     return res.status(201).json(newUser.userName);
   }
   

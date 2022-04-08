@@ -2,28 +2,21 @@ import {
   Repository,
   EntityRepository
 } from "typeorm";
-import { User as UserEntity } from "../entity/User";
+import { VerificationToken } from "../entity/VerificationToken";
 
-@EntityRepository(UserEntity)
-export default class VerifyEmailRepository extends Repository < UserEntity > {
+@EntityRepository(VerificationToken)
+export default class VerifyEmailRepository extends Repository < VerificationToken > {
 
-  public findByUniqueString(uniqueString: string): Promise<UserEntity | undefined> {
-    return this.findOne({ uniqueString });
+  public findByToken(token: string): Promise<VerificationToken | undefined> {
+    return this.findOne({ token });
   }
 
-  async updateIsVerified(queryString: string) {
+  async updateVerifiedAt(token: string) {
     return await this.update({
-      uniqueString: queryString
+      token
     }, {
-      isVerified: true,
+      verifiedAt: Date.now(),
     })
   }
 
-  public async deleteQueryStr(uniqueString: string) {
-    return await this.update({
-      uniqueString
-    }, {
-      uniqueString: undefined
-    })
-  }
 }

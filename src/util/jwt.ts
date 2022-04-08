@@ -16,7 +16,7 @@ const file = (path: string): Promise<string> => {
 
 // use @types/uuid
 export const signToken = async (payload: Payload) => {
-    const privateKey = await file(join(__dirname + "../../../jwtRS256.key"));
+    const privateKey = await file(join(__dirname + "../../../private.pem"));
     // console.log(privateKey);
     
     return sign(payload, privateKey, {
@@ -26,7 +26,7 @@ export const signToken = async (payload: Payload) => {
 }
 
 export const verifyToken = async (token: string): Promise<string | JwtPayload | undefined> => {
-    const publicKey = await file(join(__dirname + "../../../jwtRS256.key.pub"));
+    const publicKey = await file(join(__dirname + "../../../public.pem"));
 
     return new Promise((resolve, reject) => {
         verify(token, publicKey, {

@@ -1,14 +1,16 @@
 import RegisterRepository from "./RegisterRepository";
 import { User as UserEntity } from "../entity/User";
-import { getCustomRepository, getConnection } from "typeorm";
+import { getCustomRepository, getConnection, getManager } from "typeorm";
+import { randomUUID } from "crypto";
 
 
 export default class RegisterService {
   private registerRepository: RegisterRepository;
-  
+  protected manager;
   
   constructor(){
     this.registerRepository = getConnection().getCustomRepository(RegisterRepository);
+    this.manager = getManager();
   }
   
   // just realized this is boilerplate (??) as i also
@@ -28,7 +30,11 @@ export default class RegisterService {
   }
   
   public create = async (user: UserEntity) => {
-    const newUser = await this.registerRepository.save(user);
+    const newUser = await this.registerRepository.save(this.manager.create(UserEntity, user));
     return newUser;
+  }
+
+  private token () {
+    const token = randomUUID();
   }
 }
