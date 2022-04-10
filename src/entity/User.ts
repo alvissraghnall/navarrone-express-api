@@ -3,10 +3,13 @@ import {
   Column, 
   PrimaryGeneratedColumn,
   BeforeInsert,
-  OneToMany
+  OneToMany,
+  OneToOne,
+  JoinColumn
 } from "typeorm";
 import { User as UserAble } from "../types/User.type";
 import Transaction from "./Transaction";
+import { VerificationToken } from "./VerificationToken";
   
 //user_name, user_display_name, user_phone_number, user_email, user_password, user_country)
 
@@ -62,6 +65,12 @@ export class User implements UserAble {
     onUpdate: 'CASCADE', onDelete: 'CASCADE'
   })
   transactions?: Transaction[];
+
+  @OneToOne(type => VerificationToken, {
+    cascade: true
+  })
+  @JoinColumn()
+  verificationToken?: VerificationToken;
   
   /**
   @BeforeInsert()

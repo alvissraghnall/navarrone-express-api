@@ -3,10 +3,10 @@ import { body, validationResult } from "express-validator";
 
 export function errors (req: Request, res: Response, next: NextFunction) {
     let errorValidation = validationResult(req)        ;
-    if(errorValidation) {
+    if(!errorValidation.isEmpty()) {
         return res.status(400)
             .json({
-                errorValidation
+                errors: errorValidation
             });
     }
     next();
