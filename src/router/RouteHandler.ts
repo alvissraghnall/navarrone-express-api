@@ -6,6 +6,7 @@ import VerifyEmailController from "../verify-email/VerifyEmail.controller";
 import CheckEmailController from "../check-email/CheckEmail.controller";
 import PasswordController from "../password/PasswordController";
 import UserController from "../user/UserController";
+import userMiddleware from "../user/user-middleware";
 //this.router.use("/password", this.passwordController.router);
 
 
@@ -36,7 +37,7 @@ export default class RouteHandler {
     this.router.use("/login", this.loginController.router);
     this.router.use("/check-username", this.checkUserNameController.router);    
     this.router.use("/check-email", this.checkEmailController.router);
-    this.router.use("/user", this.userController.router);
+    this.router.use("/user", userMiddleware, this.userController.router);
     this.router.use("/verify-email", this.verifyEmailController.router);
     this.router.get("/", async (req, res) => {
       return res.send("God.");

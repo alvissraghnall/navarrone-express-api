@@ -15,8 +15,11 @@ export default class VerifyEmailRepository extends Repository < VerificationToke
     return await this.update({
       token
     }, {
-      verifiedAt: Date.now(),
+      verifiedAt: new Date(),
     })
   }
 
+  deleteToken = (token: VerificationToken) => {
+    return this.remove(token);
+  }
 }

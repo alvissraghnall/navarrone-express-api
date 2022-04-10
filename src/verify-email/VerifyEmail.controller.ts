@@ -3,6 +3,7 @@ import VerifyEmailService from "./VerifyEmail.service";
 import { Router, Request, Response } from "express";
 import { randomBytes } from "crypto";
 import { createTransport } from "nodemailer";
+import { getRepository, Repository } from "typeorm";
   
 
 export default class VerifyEmailController {
@@ -10,10 +11,12 @@ export default class VerifyEmailController {
   private verifyEmailService: VerifyEmailService;
   private wrongUniqueString: string = "The string you entered is incorrect. Verify, and try again.";
   private noUniqueString: string = "No unique string provided. Provide one, and try again.";
+  private userRepository: Repository<UserEntity>
 
   constructor() {
     this.router = Router();
     this.verifyEmailService = new VerifyEmailService();
+    this.userRepository = getRepository(UserEntity);
     this.routeHandler();
   }
 
@@ -21,16 +24,34 @@ export default class VerifyEmailController {
   private verify = async (req: Request, res: Response) => {
     const { queryString } = req.params;
     if(!queryString) return res.status(400).send(this.noUniqueString);
-    const exists = await this.verifyEmailService.verify(queryString);
+    const exists = await this.verifyEmailService.checkExistence(queryString);
     // first, check if user with query string provided exists.
     if(!exists) return res.status(401).send(this.wrongUniqueString);
     //  // if user does not exist, throw error.
-    const updateIsVerified = await this.verifyEmailService.update(queryString);
+
+    if(exists.verifiedAt) {
+      return res.status(204).json({
+        msg: "User already confirmed."
+      })
+    }
+
+    const tokenExpiry = exists.expiresAt;
+    if(new Date() > tokenExpiry) {
+      this.verifyEmailService.delete(exists);
+      const user = await this.userRepository.findOne({
+        where: {id: exists.user}
+      })
+      this.userRepository.remove(user!)
+      return res.status(401)
+        .json({ msg: "user failed to authenticate mail withun 24 hours. Please re sign-up to use our service."})
+    }
+    // check if token is expired
+    const updateIsVerified = await this.verifyEmailService.updateVerifiedAt(queryString);
     console.log(updateIsVerified);
     
     // // else, update table to reflect change in isVerified column to true. 
-    const deleteQueryString = await this.verifyEmailService.delete(queryString);
-    console.log(deleteQueryString);
+    // const deleteQueryString = await this.verifyEmailService.delete(queryString);
+    // console.log(deleteQueryString);
     
     return res.sendStatus(200);
     // // // (???) delete queryString . unsure at the moment about this part.

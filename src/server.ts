@@ -46,7 +46,14 @@ createConnection({
   __dirname + "/entity/*.ts"
   ],
   synchronize: true,
-  logging: true
+  logging: true,
+  entityPrefix: "nv",
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    }
+  },
+  ssl: true
 }).then(async conn => {
   const server = new Server();
   server.start();

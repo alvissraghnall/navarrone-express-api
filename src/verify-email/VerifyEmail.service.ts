@@ -1,6 +1,7 @@
 import { User as UserEntity } from "../entity/User";
 import { getCustomRepository } from 'typeorm';
 import VerifyEmailRepository from "./VerifyEmail.repository";
+import { VerificationToken } from "../entity/VerificationToken";
 
 export default class VerifyEmailService {
 
@@ -10,18 +11,25 @@ export default class VerifyEmailService {
     this.verifyEmailRepository = getCustomRepository(VerifyEmailRepository);
   }
 
-  verify = async (queryStr: string) => {
-    const exists = await this.verifyEmailRepository.findByToken(queryStr);
+  checkExistence = async (token: string) => {
+    const exists = await this.verifyEmailRepository.findByToken(token);
     return exists;
   }
 
-  update = async (queryStr: string) => {
-    const updateIsVerified = await this.verifyEmailRepository.updateVerifiedAt(queryStr);
+  updateVerifiedAt = async (token: string) => {
+    const updateIsVerified = await this.verifyEmailRepository.updateVerifiedAt(token);
     return updateIsVerified;
   }
 
-  delete = async (queryStr: string) => {
-    const deleteQueryString = await this.verifyEmailRepository.findByToken(queryStr);
-    return deleteQueryString;
+  // verifyValidity = async (token: string) => {
+  //   const verifier = await this.checkExistence(token);
+  //   const tokenExpiry = verifier?.expiresAt;
+  //   if()
+  // }
+
+  delete = async (verificationToken: VerificationToken) => {
+    const deletedToken = await this.verifyEmailRepository.deleteToken(verificationToken);
+
+    return deletedToken;
   } 
 }

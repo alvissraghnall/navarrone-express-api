@@ -32,16 +32,21 @@ export default class LoginController {
 
   private loginUser = async (req: Request, res: Response): Promise<Response> => {
     const user = req.body;
-    const { password, isVerified } = await this.loginService.retrievePwd(user.email);
+    const { password, id } = await this.loginService.retrievePwdAndId(user.email);
     if(password) {
       const validPwd = await this.verifyPassword(user.password, password);
       if(!validPwd) {
         return res.status(401).send(this.inputErrorMessage);
       }
-      if(!isVerified) {
+      // verify user confirmation
+      if(!id) {
+        return res.status(400).send(this.inputErrorMessage);
+      }
+      const verifiedAt = await this.loginService.checkUserConfirmation(id);
+      if (!verifiedAt) {
         return res.status(401).send(this.unVerifiedErrorMessage);
       }
-      const id = await this.loginService.getId(password);
+      // const _id = await this.loginService.getId(password);
       const payload: Payload = {
         id: id as unknown as string
       }

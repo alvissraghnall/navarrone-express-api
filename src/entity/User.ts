@@ -50,9 +50,7 @@ export class User implements UserAble {
   @Column("varchar")
   country?: string;
   
-  @Column({ default: false })
-  isVerified?: boolean;
-  
+  confirmPassword?: string;
 
   // @Column({
   //   type: "boolean",
