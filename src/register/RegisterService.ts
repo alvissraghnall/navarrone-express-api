@@ -34,8 +34,8 @@ export default class RegisterService {
   
   public create = async (user: UserEntity) => {
     const newUser = await this.registerRepository.save(this.manager.create(UserEntity, user));
-    await this.generateAndSaveToken(newUser);
-    return newUser;
+    const token = await this.generateAndSaveToken(newUser);
+    return token;
   }
 
   private generateAndSaveToken (user: UserEntity) {
@@ -47,5 +47,6 @@ export default class RegisterService {
       verifiedAt: null
     }
     this.verificationTokenRepository.save(this.manager.create(VerificationToken, userToken));
+    return userToken.token;
   }
 }

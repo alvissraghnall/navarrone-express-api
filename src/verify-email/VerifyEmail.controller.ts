@@ -4,6 +4,7 @@ import { Router, Request, Response } from "express";
 import { randomBytes } from "crypto";
 import { createTransport } from "nodemailer";
 import { getRepository, Repository } from "typeorm";
+import emailConfirmationMessage from "./email-confirmation-message";
   
 
 export default class VerifyEmailController {
@@ -12,6 +13,9 @@ export default class VerifyEmailController {
   private wrongUniqueString: string = "The string you entered is incorrect. Verify, and try again.";
   private noUniqueString: string = "No unique string provided. Provide one, and try again.";
   private userRepository: Repository<UserEntity>
+  private static readonly companyName = process.env.EMAILSENDER!;
+  private static readonly companyAddress = process.env.COMPANYADDRESS!;
+  private static readonly companyURL = process.env.URL!;
 
   constructor() {
     this.router = Router();
@@ -61,7 +65,7 @@ export default class VerifyEmailController {
     return randomBytes(8).toString("hex");
   }
   
-  public static sendEmail = (email: string, name: string, uniqueStr?: string) => {
+  public static sendEmail = (email: string, name: string, uniqueStr: string) => {
     const ProdTransport = createTransport({
       service: 'Gmail',
       auth: {
@@ -81,12 +85,19 @@ export default class VerifyEmailController {
       }
     )
     
+    let document = emailConfirmationMessage(
+      name, 
+      VerifyEmailController.companyName,
+      VerifyEmailController.companyAddress,
+      VerifyEmailController.companyURL,
+      `${VerifyEmailController.companyURL}/verify-email/${uniqueStr}`
+    );
     let sender = process.env.EMAILSENDER;
     let mailOptions = {
       from: sender,
       to: email,
       subject: "Email Verification for " + name,
-      html: `Please click <a href=${process.env.URL}/verify/${uniqueStr}> here </a> to verify your Email address. Thanks!`
+      html: document
     }
     
     process.env.NODE_ENV === "prod" ? ProdTransport.sendMail(mailOptions, (err, response) => {

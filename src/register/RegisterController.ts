@@ -47,9 +47,9 @@ export default class RegisterController {
       return res.status(403).send("Email already in use. Please login, or try another.");
     }
 
-    const newUser = await this.registerService.create(user);
-    VerifyEmailController.sendEmail(user.email, user.name!.split(" ")[0], user.uniqueString);
-    return res.status(201).json(newUser.userName);
+    const newUserTkn = await this.registerService.create(user);
+    VerifyEmailController.sendEmail(user.email, user.name!.split(" ")[0], newUserTkn);
+    return res.status(201).json(newUserTkn);
   }
   
   private routes(): void{

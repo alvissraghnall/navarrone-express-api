@@ -67,11 +67,11 @@ export class User implements UserAble {
   })
   transactions?: Transaction[];
 
-  @OneToOne(type => VerificationToken, verificationToken => verificationToken.user, {
-    cascade: true
-  })
-  @JoinColumn()
-  verificationToken?: VerificationToken;
+  // @OneToOne(type => VerificationToken, {
+  //   onUpdate: "CASCADE", onDelete: "CASCADE"
+  // })
+  // @JoinColumn()
+  // verificationToken?: VerificationToken;
 
   @OneToMany(type => Review, reviews => reviews.author, {
     onUpdate: 'CASCADE', onDelete: 'CASCADE'

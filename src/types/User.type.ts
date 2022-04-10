@@ -6,8 +6,8 @@ export interface User {
   email: string;
   password: string;
   country?: string;
-  isVerified?: boolean;
+  // isVerified?: boolean;
   //hashPassword: () => /* Promise<void> */ string;
   isAccountLocked?: boolean;
-  uniqueString?: string;
+  // uniqueString?: string;
 }

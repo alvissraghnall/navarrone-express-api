@@ -7,7 +7,6 @@ define(UserEntity, () => {
     nu.country = "Faroe Islands";
     nu.email = "robterry@gmail.com";
     // nu.isAccountLocked = false;
-    nu.isVerified = true;
     nu.name = "Robert Terry";
     nu.password = "blahblahbalhhh!!!";
     nu.phoneNumber = "+1 25 28 3876 2";
