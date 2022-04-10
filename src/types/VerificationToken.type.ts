@@ -6,7 +6,7 @@ export interface VerificationTokenIntFace {
 
     expiresAt: Date;
 
-    verifiedAt: Date;
+    verifiedAt: Date | null;
 
     // createdAt: Date;
 }

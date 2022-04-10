@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { TokenExpiredError } from "jsonwebtoken";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { NoTokenFoundError, ServerError } from "../util/errors";
 import { verifyToken } from "../util/jwt";
 
@@ -12,7 +12,7 @@ export default async function (req:Request, res: Response, next: NextFunction) {
             throw new NoTokenFoundError();
         }
         const payload = await verifyToken(token);
-        res.locals = {payload};
+        res.locals.payload = payload;
         return next();
 
     } catch (e) {
@@ -27,6 +27,9 @@ export default async function (req:Request, res: Response, next: NextFunction) {
                 .json({
                     message: err.message
                 });
+        } else if ( err instanceof JsonWebTokenError) {
+            return res.status(400)
+                .json({ message: "Invalid JWT provided"});
         } else {
             return res.status(500)
                 .send(new ServerError().message);

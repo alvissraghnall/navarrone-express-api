@@ -23,7 +23,7 @@ export class VerificationToken implements VerificationTokenIntFace {
         type: "timestamp with time zone",
         nullable: true
     })
-    verifiedAt!: Date;
+    verifiedAt!: Date | null;
 
     @OneToOne(type => User, user => user.id)
     user!: User;

@@ -43,7 +43,8 @@ export default class RegisterService {
     const userToken = {
       token: randomUUID(),
       expiresAt: new Date(Date.now() + (1000 * 3600 * 24)),
-      user: user
+      user: user,
+      verifiedAt: null
     }
     this.verificationTokenRepository.save(this.manager.create(VerificationToken, userToken));
   }

@@ -8,6 +8,7 @@ import {
   JoinColumn
 } from "typeorm";
 import { User as UserAble } from "../types/User.type";
+import Review from "./Review";
 import Transaction from "./Transaction";
 import { VerificationToken } from "./VerificationToken";
   
@@ -66,11 +67,16 @@ export class User implements UserAble {
   })
   transactions?: Transaction[];
 
-  @OneToOne(type => VerificationToken, {
+  @OneToOne(type => VerificationToken, verificationToken => verificationToken.user, {
     cascade: true
   })
   @JoinColumn()
   verificationToken?: VerificationToken;
+
+  @OneToMany(type => Review, reviews => reviews.author, {
+    onUpdate: 'CASCADE', onDelete: 'CASCADE'
+  })
+  reviews?: Review[];
   
   /**
   @BeforeInsert()

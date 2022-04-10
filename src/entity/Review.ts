@@ -18,9 +18,10 @@ export default class Review {
     })
     content!: string
 
-    @Column()
-    // @ManyToOne( )
-    author!: string
+    @ManyToOne(type => User, user => user.id, {
+        onUpdate: 'CASCADE', onDelete: 'CASCADE'
+    })
+    author!: User
 
     @Column()
     stars!: number;
