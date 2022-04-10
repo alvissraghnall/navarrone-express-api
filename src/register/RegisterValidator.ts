@@ -6,15 +6,14 @@ export function errors (req: Request, res: Response, next: NextFunction) {
     if(errorValidation) {
         return res.status(400)
             .json({
-                error: errorValidation
-            })
+                errorValidation
+            });
     }
     next();
 }
 
 export let checks = [
     body("name").exists({ checkNull: true, checkFalsy: true })
-        .isAlpha().withMessage("Name must be made of only characters from the alphabet")
         .isLength({ min: 3 }).withMessage("Name must have at least 3 characters")
         .trim(),
         

@@ -53,7 +53,7 @@ export default class RegisterController {
   }
   
   private routes(): void{
-    this.router.post("/", validation, checks, errors, this.registerUser)
+    this.router.post("/", checks, errors, this.registerUser)
   }
 }
 
