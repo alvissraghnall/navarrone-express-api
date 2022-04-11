@@ -28,13 +28,12 @@ export default class LoginService {
     return { f: false, p: false }
   }
 
-  getId = async (hash: string) => {
-    const uid = await this.userRepository
+  getUser = async (id: string) => {
+    const user = await this.userRepository
       .findOne({
-        select: ["id"],
-        where: { password: hash }
+        where: { id }
       });
-    return uid;
+    return user;
   }
 
   findByEmail = async (email: string) => {
@@ -46,12 +45,11 @@ export default class LoginService {
     return values;
   }
 
-  checkUserConfirmation = async (id: string) => {
-    const verifiedAt = await this.verificationTokenRepository
+  checkUserConfirmation = async (user: UserEntity) => {
+    const token = await this.verificationTokenRepository
       .findOne({
-        where: { user: id },
-        select: ["verifiedAt"]
+        where: { user }
       });
-    return verifiedAt;
+    return token;
   }
 }

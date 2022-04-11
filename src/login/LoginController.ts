@@ -4,6 +4,8 @@ import { scrypt } from "crypto";
 import validation from "../middleware/validation";
 import { signToken } from "../util/jwt";
 import type { Payload } from "../types/General";
+import { loginCheck } from "./login-validator";
+import { errors } from "../register/RegisterValidator";
 
 export default class LoginController {
   inputErrorMessage: string = "Invalid email, or password entered. Please verify, and try again.";
@@ -42,8 +44,13 @@ export default class LoginController {
       if(!id) {
         return res.status(400).send(this.inputErrorMessage);
       }
-      const verifiedAt = await this.loginService.checkUserConfirmation(id);
-      if (!verifiedAt) {
+      const acct = await this.loginService.getUser(id);
+      console.log(acct);
+      
+      const userToken = acct ? await this.loginService.checkUserConfirmation(acct) : undefined;
+      // console.log(verifiedAt, "c");
+      
+      if (!userToken?.verifiedAt) {
         return res.status(401).send(this.unVerifiedErrorMessage);
       }
       // const _id = await this.loginService.getId(password);
@@ -56,12 +63,12 @@ export default class LoginController {
       return res
         .status(200)
         .setHeader("authorization", `Bearer ${token}`)
-        .send("Login successful");
+        .json({message: "Login successful"});
     }
     return res.status(401).send(this.inputErrorMessage);
   }
 
   private routes() {
-    this.router.post("/", validation, this.loginUser)
+    this.router.post("/", loginCheck, errors, this.loginUser)
   }
 }

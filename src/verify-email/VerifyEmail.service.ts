@@ -1,14 +1,16 @@
 import { User as UserEntity } from "../entity/User";
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository, Repository } from 'typeorm';
 import VerifyEmailRepository from "./VerifyEmail.repository";
 import { VerificationToken } from "../entity/VerificationToken";
 
 export default class VerifyEmailService {
 
   private verifyEmailRepository: VerifyEmailRepository;
+  private userRepository: Repository<UserEntity>
 
   constructor() {
     this.verifyEmailRepository = getCustomRepository(VerifyEmailRepository);
+    this.userRepository = getRepository(UserEntity);
   }
 
   checkExistence = async (token: string) => {
@@ -32,4 +34,11 @@ export default class VerifyEmailService {
 
     return deletedToken;
   } 
+
+  deleteUser = async (user: UserEntity) => {
+    
+    const deletedUser = await this.userRepository.remove(user);
+    
+    return deletedUser;
+  }
 }

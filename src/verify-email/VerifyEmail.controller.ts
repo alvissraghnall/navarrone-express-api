@@ -12,7 +12,6 @@ export default class VerifyEmailController {
   private verifyEmailService: VerifyEmailService;
   private wrongUniqueString: string = "The string you entered is incorrect. Verify, and try again.";
   private noUniqueString: string = "No unique string provided. Provide one, and try again.";
-  private userRepository: Repository<UserEntity>
   private static readonly companyName = process.env.EMAILSENDER!;
   private static readonly companyAddress = process.env.COMPANYADDRESS!;
   private static readonly companyURL = process.env.URL!;
@@ -20,7 +19,6 @@ export default class VerifyEmailController {
   constructor() {
     this.router = Router();
     this.verifyEmailService = new VerifyEmailService();
-    this.userRepository = getRepository(UserEntity);
     this.routeHandler();
   }
 
@@ -42,10 +40,10 @@ export default class VerifyEmailController {
     const tokenExpiry = exists.expiresAt;
     if(new Date() > tokenExpiry) {
       this.verifyEmailService.delete(exists);
-      const user = await this.userRepository.findOne({
-        where: {id: exists.user}
-      })
-      this.userRepository.remove(user!)
+      
+      const user = await this.verifyEmailService.deleteUser(exists.user);
+      console.log(user);
+      // this.userRepository.remove(user!)
       return res.status(401)
         .json({ msg: "user failed to authenticate mail withun 24 hours. Please re sign-up to use our service."})
     }

@@ -7,10 +7,12 @@ export default async function (req:Request, res: Response, next: NextFunction) {
     try {
         
         const BEARER = "Bearer";
-        const token = req.headers["authorization"];
-        if(!token) {
+        const tokenFromHeader = req.headers["authorization"];
+        if(!tokenFromHeader) {
             throw new NoTokenFoundError();
         }
+        const token = tokenFromHeader.replace(BEARER, "").trim();;
+        
         const payload = await verifyToken(token);
         res.locals.payload = payload;
         return next();

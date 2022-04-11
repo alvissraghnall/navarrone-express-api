@@ -21,6 +21,8 @@ export default class WithdrawalsService {
     }
 
     sendWithdrawals = async (req: Request, res: Response) => {
+        // console.log(res.locals);
+        
         const id = res.locals.payload.id;
         const txns = this.getWithdrawals(id);
 

@@ -26,7 +26,7 @@ export class VerificationToken implements VerificationTokenIntFace {
     verifiedAt!: Date | null;
 
     @OneToOne(type => User, user => user.id, {
-        onUpdate: "CASCADE", onDelete: "CASCADE"
+        onUpdate: "CASCADE", onDelete: "CASCADE", eager: true
     })
     @JoinColumn()
     user!: User;
