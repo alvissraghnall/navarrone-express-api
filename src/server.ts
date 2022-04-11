@@ -18,6 +18,7 @@ class Server {
     this.app.set("port", process.env.PORT || 3000);
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use("/public", express.static("public"));
   }
   
   public async routes () {

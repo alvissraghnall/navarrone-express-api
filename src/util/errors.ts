@@ -10,3 +10,9 @@ export class ServerError extends Error {
         super("Something went wrong from our end, however, we promise to fix it soon.");
     }
 }
+
+export class IllegalPictureFormatError extends Error {
+    constructor() {
+        super("Only .jpg, .png && .jpeg file formats are accepted!");
+    }
+}

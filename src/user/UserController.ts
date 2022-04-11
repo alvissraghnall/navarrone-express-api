@@ -1,7 +1,11 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
+import multer, { Multer, StorageEngine } from "multer";
+import { v4 } from "uuid";
+import { IllegalPictureFormatError } from "../util/errors";
 import DashboardController from "./dashboard/DashboardController";
 import DepositsService from "./deposits/DepositsService";
+import ChangeProfilePictureService from "./profile/change-profile-picture.service";
 import ProfileService from "./profile/ProfileService";
 import WithdrawalsService from "./withdrawals/WithdrawalsService";
 
@@ -12,6 +16,9 @@ export default class UserController {
     private depositsService: DepositsService;
     private withdrawalsService: WithdrawalsService;
     private profileService: ProfileService;
+    private changeProfilePictureService: ChangeProfilePictureService;
+    private upload: Multer;
+    private storage: StorageEngine;
 
     constructor() {
         this.router = Router();
@@ -19,6 +26,31 @@ export default class UserController {
         this.depositsService = new DepositsService();
         this.withdrawalsService = new WithdrawalsService();
         this.profileService = new ProfileService();
+        this.changeProfilePictureService = new ChangeProfilePictureService();
+        this.storage = multer.diskStorage({
+            destination: "../../../public",
+            filename: (req, file, cb) => {
+                const fileName = file.originalname
+                    .toLowerCase()
+                    .split(" ")
+                    .join("-");
+                cb(null, v4() + "-" + fileName);
+            }
+        })
+        this.upload = multer({
+            storage: this.storage,
+            fileFilter: (req, file, cb) => {
+                if(file.mimetype === "image/png" ||
+                    file.mimetype === "image/jpg" ||
+                    file.mimetype === "image/jpeg"
+                ) {
+                    cb(null, true);
+                } else {
+                    cb(null, false);
+                    return cb(new IllegalPictureFormatError());
+                }
+            }
+        })
         this.routes();
     }
 
@@ -27,6 +59,7 @@ export default class UserController {
         this.router.get("/deposits", this.depositsService.sendTxns);
         this.router.get("/withdrawals", this.withdrawalsService.sendWithdrawals);
         this.router.get("/profile", this.profileService.userDetails);
+        this.router.post("/profile/password/change", this.upload.single("avatar"), this.changeProfilePictureService.reqHandler);
     }
 
 }
