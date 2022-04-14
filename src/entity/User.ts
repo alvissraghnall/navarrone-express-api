@@ -67,6 +67,11 @@ export class User implements UserAble {
   })
   transactions?: Transaction[];
 
+  @Column({
+    nullable: true
+  })
+  profilePicture!: string;
+
   // @OneToOne(type => VerificationToken, {
   //   onUpdate: "CASCADE", onDelete: "CASCADE"
   // })
