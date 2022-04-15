@@ -70,7 +70,7 @@ export class User implements UserAble {
   @Column({
     nullable: true
   })
-  profilePicture!: string;
+  profilePicture?: string;
 
   // @OneToOne(type => VerificationToken, {
   //   onUpdate: "CASCADE", onDelete: "CASCADE"

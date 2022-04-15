@@ -2,6 +2,7 @@ import { User as UserEntity } from "../entity/User";
 import { getRepository, Repository } from 'typeorm';
 // import LoginRepository from "./LoginRepository";
 import { VerificationToken } from "../entity/VerificationToken";
+import LoginTries from "../entity/LoginTries";
 //import RegisterRepository from "../register/RegisterRepository";
 
 export default class LoginService {
@@ -9,10 +10,12 @@ export default class LoginService {
   private readonly userRepository: Repository<UserEntity>;
   private readonly verificationTokenRepository: Repository<VerificationToken>;
   //private readonly registerRepository: RegisterRepository;
+  private readonly loginTriesRepository: Repository<LoginTries>;
 
   constructor() {
     this.userRepository = getRepository(UserEntity);
     this.verificationTokenRepository = getRepository(VerificationToken)
+    this.loginTriesRepository = getRepository(LoginTries);
   }
 
   retrievePwdAndId = async (email: string) => {
@@ -51,5 +54,12 @@ export default class LoginService {
         where: { user }
       });
     return token;
+  }
+
+  checkLockedUser = async (id:number) => {
+    const userTriedTimes = this.loginTriesRepository.findOne({
+      where: { user: id },
+      select: ["times"]
+    }) 
   }
 }
