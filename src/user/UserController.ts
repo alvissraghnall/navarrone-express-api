@@ -21,6 +21,7 @@ export default class UserController {
     private upload: Multer;
     private uploadDepositService: UploadDepositService
     private storage: StorageEngine;
+    private depositStorage: StorageEngine;
 
     constructor() {
         this.router = Router();
@@ -43,7 +44,11 @@ export default class UserController {
         this.depositStorage = multer.diskStorage({
             destination: "../../deposits",
             filename: function (req, file, cb)  {
-                const fn = 
+                const fileName = v4() + "-" + file.originalname
+                    .toLowerCase()
+                    .split(" ")
+                    .join("-");
+                cb(null, fileName);
             }
         })
         this.upload = multer({
