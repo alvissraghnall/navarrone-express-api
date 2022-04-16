@@ -57,9 +57,17 @@ export default class LoginService {
   }
 
   checkLockedUser = async (id:number) => {
-    const userTriedTimes = this.loginTriesRepository.findOne({
+    const userTriedTimes = await this.loginTriesRepository.findOne({
       where: { user: id },
       select: ["times"]
-    }) 
+    });
+    return userTriedTimes;
+  }
+
+  increaseLoginTries = async (id: number) => {
+    /// !!!!WUTTTTT!!!!
+    const updateUserTriedLoginTries = await this.loginTriesRepository.increment({
+      user: id
+    }, "times", "++");
   }
 }
