@@ -4,7 +4,7 @@ import LoginController from "../login/LoginController";
 import CheckUserNameController from "../check-username/CheckUserName.controller";
 import VerifyEmailController from "../verify-email/VerifyEmail.controller";
 import CheckEmailController from "../check-email/CheckEmail.controller";
-import PasswordController from "../password/PasswordController";
+import PasswordController from "../user/password/PasswordController";
 import UserController from "../user/UserController";
 import userMiddleware from "../user/user-middleware";
 //this.router.use("/password", this.passwordController.router);

@@ -14,7 +14,7 @@ export default class ChangePasswordController {
     }
 
     change = (req: Request, res: Response) => {
-        
+        const { oldPassword, newPassword } = req.body;
     }
 
     forgot = (req: Request, res: Response) => {

@@ -6,6 +6,8 @@ import { IllegalPictureFormatError } from "../util/errors";
 import DashboardController from "./dashboard/DashboardController";
 import DepositsService from "./deposits/DepositsService";
 import UploadDepositService from "./deposits/upload-deposit-service";
+import { ChangePasswordChecks, showErrors } from "./password/change-password-validator";
+import ChangePasswordController from "./password/PasswordController";
 import ChangeProfilePictureService from "./profile/change-profile-picture.service";
 import ProfileService from "./profile/ProfileService";
 import WithdrawalsService from "./withdrawals/WithdrawalsService";
@@ -22,6 +24,7 @@ export default class UserController {
     private uploadDepositService: UploadDepositService
     private storage: StorageEngine;
     private depositStorage: StorageEngine;
+    private passwordController: ChangePasswordController;
 
     constructor() {
         this.router = Router();
@@ -31,6 +34,7 @@ export default class UserController {
         this.profileService = new ProfileService();
         this.uploadDepositService = new UploadDepositService();
         this.changeProfilePictureService = new ChangeProfilePictureService();
+        this.passwordController = new ChangePasswordController();
         this.storage = multer.diskStorage({
             destination: "../../public",
             filename: (req, file, cb) => {
@@ -75,6 +79,7 @@ export default class UserController {
         this.router.get("/profile", this.profileService.userDetails);
         this.router.post("/profile/password/change", this.upload.single("avatar"), this.changeProfilePictureService.reqHandler);
         this.router.post("/upload-deposit", this.upload.single("deposit"), this.uploadDepositService.reqHandler);
+        this.router.post("/password", ChangePasswordChecks, showErrors, this.passwordController.router);
     }
 
 }

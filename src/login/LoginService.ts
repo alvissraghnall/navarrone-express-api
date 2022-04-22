@@ -56,9 +56,12 @@ export default class LoginService {
     return token;
   }
 
-  checkLockedUser = async (id:string) => {
+  checkLockedUser = async (user: User) => {
     const userTriedTimes = await this.loginTriesRepository.findOne({
-      where: { user: id }
+      relations: ["user"],
+      where: { 
+        user
+      }
     });
     return userTriedTimes;
   }
@@ -77,7 +80,7 @@ export default class LoginService {
     //   times: 1, user
     // }
     const newEntity = new LoginTries(user);
-    this.loginTriesRepository.save(newEntity);
+    return await this.loginTriesRepository.save(newEntity);
     
   }
 }

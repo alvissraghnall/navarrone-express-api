@@ -1,5 +1,5 @@
 import { Repository, getConnection } from "typeorm";
-import { User as UserEntity } from "../entity/User";
+import { User as UserEntity } from "../../entity/User";
 
 
 export default class ChangePasswordService {
@@ -10,7 +10,7 @@ export default class ChangePasswordService {
     }
 
     change = async (oldPassword: string) => {
-
+        
     }
 
     reset = async (id: string) => {

@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User";
 
 @Entity()
@@ -11,7 +11,21 @@ export default class LoginTries {
     times!: number;
 
     @OneToOne(type => User, user => user.id)
+    @JoinColumn()
     user!: User;
+
+    @CreateDateColumn({
+        type: 'timestamp with time zone',
+        default: () => "CURRENT_TIMESTAMP(6)"
+    })
+    createdAt?: Date;
+
+    @UpdateDateColumn({
+        type: 'timestamp with time zone',
+        default: () => "CURRENT_TIMESTAMP(6)",
+        onUpdate: "CURRENT_TIMESTAMP(6)"
+    })
+    updatedAt?: Date;
 
     constructor(_user: User) {
         this.times = 1;

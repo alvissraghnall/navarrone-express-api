@@ -38,11 +38,13 @@ export default class LoginController {
     const { password, id } = await this.loginService.retrievePwdAndId(user.email);
     if(password && id) {
       const userAcct = await this.loginService.getUser(id);
-      await this.loginService.increaseLoginTries(userAcct!);
-      const triedLoginTimes = await this.loginService.checkLockedUser(id);
-      if(!triedLoginTimes) {
-        await this.loginService.createLoginTries(userAcct!);
+      let triedLoginTimes = await this.loginService.checkLockedUser(userAcct!);
+      
+      if(!triedLoginTimes || typeof triedLoginTimes === "undefined") {
+        triedLoginTimes = await this.loginService.createLoginTries(userAcct!);
       }
+      console.log(triedLoginTimes);
+      await this.loginService.increaseLoginTries(userAcct!);
       if (triedLoginTimes!.times >= 5) {
         return res.status(403).json({
           message: this.triedLoginTooOftenMessage
