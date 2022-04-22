@@ -62,7 +62,7 @@ export class User implements UserAble {
   // })
   // isAccountLocked?: boolean;
 
-  @OneToMany(type => Transaction, transactions => transactions.user, {
+  @OneToMany(type => Transaction, transactions => transactions.id, {
     onUpdate: 'CASCADE', onDelete: 'CASCADE'
   })
   transactions?: Transaction[];

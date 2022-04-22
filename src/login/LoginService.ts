@@ -1,4 +1,4 @@
-import { User as UserEntity } from "../entity/User";
+import { User, User as UserEntity } from "../entity/User";
 import { getRepository, Repository } from 'typeorm';
 // import LoginRepository from "./LoginRepository";
 import { VerificationToken } from "../entity/VerificationToken";
@@ -56,18 +56,28 @@ export default class LoginService {
     return token;
   }
 
-  checkLockedUser = async (id:number) => {
+  checkLockedUser = async (id:string) => {
     const userTriedTimes = await this.loginTriesRepository.findOne({
-      where: { user: id },
-      select: ["times"]
+      where: { user: id }
     });
     return userTriedTimes;
   }
 
-  increaseLoginTries = async (id: number) => {
+  increaseLoginTries = async (user: User) => {
     /// !!!!WUTTTTT!!!!
-    const updateUserTriedLoginTries = await this.loginTriesRepository.increment({
-      user: id
-    }, "times", "++");
+    const updateUserTriedLoginTries = await this.loginTriesRepository.update({
+      user
+    }, {
+      times: () => "times + 1"
+    })
+  }
+
+  createLoginTries = async (user: User) => {
+    // const newEntity = {
+    //   times: 1, user
+    // }
+    const newEntity = new LoginTries(user);
+    this.loginTriesRepository.save(newEntity);
+    
   }
 }

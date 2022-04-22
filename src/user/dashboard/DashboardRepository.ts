@@ -8,7 +8,7 @@ import { User } from "../../entity/User";
 @EntityRepository(User)
 export default class DashboardRepository extends Repository<User> {
 
-    public getAllUserTransactions = (userId: string) => {
+    public getAllUserTransactions = (userId: string): Promise<User | undefined> => {
         return this.findOne({
             select: ["transactions"],
             where: { id: userId }

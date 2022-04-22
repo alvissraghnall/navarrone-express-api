@@ -10,6 +10,7 @@ import { errors } from "../register/RegisterValidator";
 export default class LoginController {
   inputErrorMessage: string = "Invalid email, or password entered. Please verify, and try again.";
   unVerifiedErrorMessage: string = "You are yet to verify your email address. Please do so, before attempting another login.";
+  private readonly triedLoginTooOftenMessage: string = "You have attempted login way too frequently, hence your account has been blocked temporarily.";
   
   public router: Router;
   private readonly loginService: LoginService;
@@ -35,19 +36,30 @@ export default class LoginController {
   private loginUser = async (req: Request, res: Response): Promise<Response> => {
     const user = req.body;
     const { password, id } = await this.loginService.retrievePwdAndId(user.email);
-    if(password) {
+    if(password && id) {
+      const userAcct = await this.loginService.getUser(id);
+      await this.loginService.increaseLoginTries(userAcct!);
+      const triedLoginTimes = await this.loginService.checkLockedUser(id);
+      if(!triedLoginTimes) {
+        await this.loginService.createLoginTries(userAcct!);
+      }
+      if (triedLoginTimes!.times >= 5) {
+        return res.status(403).json({
+          message: this.triedLoginTooOftenMessage
+        })
+      }
       const validPwd = await this.verifyPassword(user.password, password);
       if(!validPwd) {
         return res.status(401).send(this.inputErrorMessage);
       }
       // verify user confirmation
-      if(!id) {
-        return res.status(400).send(this.inputErrorMessage);
-      }
-      const acct = await this.loginService.getUser(id);
-      console.log(acct);
+      // if(!id) {
+      //   return res.status(400).send(this.inputErrorMessage);
+      // }
+      // const acct = await this.loginService.getUser(id);
+      // console.log(acct);
       
-      const userToken = acct ? await this.loginService.checkUserConfirmation(acct) : undefined;
+      const userToken = userAcct ? await this.loginService.checkUserConfirmation(userAcct) : undefined;
       // console.log(verifiedAt, "c");
       
       if (!userToken?.verifiedAt) {
@@ -65,7 +77,7 @@ export default class LoginController {
         .setHeader("authorization", `Bearer ${token}`)
         .json({message: "Login successful"});
     }
-    return res.status(401).send(this.inputErrorMessage);
+    return res.status(400).send(this.inputErrorMessage);
   }
 
   private routes() {
