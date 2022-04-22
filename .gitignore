@@ -9,3 +9,7 @@ ormconfig.json
 *.pub
 git
 *.pem
+seeds
+subscriber
+migration
+factories

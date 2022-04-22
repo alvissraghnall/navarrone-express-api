@@ -45,7 +45,7 @@ export default class LoginController {
       }
       console.log(triedLoginTimes);
       await this.loginService.increaseLoginTries(userAcct!);
-      if (triedLoginTimes!.times >= 5) {
+      if (triedLoginTimes!.times >= 5 && triedLoginTimes.updatedAt! > new Date(Date.now() - (5 * 60 * 60 * 1000))) {
         return res.status(403).json({
           message: this.triedLoginTooOftenMessage
         })
